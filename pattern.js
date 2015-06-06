@@ -6,8 +6,8 @@ var Pattern = function(canvasId, personalMeasurements){
 function setCanvasSize(canvas){
   canvas.width = 1000;
   canvas.height = 1000;
-  canvas.style.width  = '100cm';
-  canvas.style.height = '100cm';
+  canvas.style.width  = '100in';
+  canvas.style.height = '100in';
   console.log('hi');
 }
 
@@ -29,9 +29,10 @@ var personalMeasurements = {
 
 var patternPoints = function(personalMeasurements){
   this.AB = personalMeasurements.fullLength;
+  this.CX = personalMeasurements.fullLength;
   this.AC = personalMeasurements.acrossShoulder;
-  this.BD =
-
+  this.BD = personalMeasurements.centerFrontLength - 0.375;
+  this.BE = Math.sqrt((this.CX * this.CX) + ());
 }
 
 window.onload = function(){
