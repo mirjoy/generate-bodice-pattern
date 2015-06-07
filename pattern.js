@@ -1,20 +1,13 @@
 var Pattern = function(canvasId, personalMeasurements){
   startingX = 20;
   startingY = 20;
+  startingSeamLine = 100;
 
   this.canvas = document.getElementById(canvasId);
   // setCanvasSize(this.canvas);
   this.context = this.canvas.getContext('2d');
   ctx = this.context;
 
-  // draw top line for reference, and middle seam
-  ctx.beginPath();
-  ctx.moveTo(startingX,startingY);
-  ctx.lineTo(100,startingY);
-  ctx.lineTo(100,personalMeasurements.fullLength + startingY);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'black';
-  ctx.stroke();
 
   // draw shoulder seam
   ctx.beginPath();
@@ -26,8 +19,21 @@ var Pattern = function(canvasId, personalMeasurements){
 
   // draw neckline curve
   ctx.beginPath();
-  ctx.moveTo(startingX + (personalMeasurements.shoulderLength * Math.sin(20)), startingY)
-  ctx.bezierCurveTo()
+  var necklineStartingX = startingX + (personalMeasurements.shoulderLength * Math.sin(20));
+  var necklineStartingY = startingY;
+  var necklineMiddleX = 24;
+  var necklineMiddleY = 26;
+  var necklineEndingX = startingSeamLine;
+  var necklineEndingY = personalMeasurements.fullLength - (personalMeasurements.centerFrontLength - 0.375);
+  ctx.bezierCurveTo(necklineStartingX, necklineStartingY, necklineMiddleX, necklineMiddleY, necklineEndingX, necklineEndingY);
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'black';
+  ctx.stroke();
+
+  // draw middle seam
+  ctx.beginPath();
+  ctx.moveTo(startingSeamLine,necklineEndingY);
+  ctx.lineTo(startingSeamLine,startingY + personalMeasurements.fullLength);
   ctx.lineWidth = 1;
   ctx.strokeStyle = 'black';
   ctx.stroke();
