@@ -1,42 +1,62 @@
 var Pattern = function(canvasId, personalMeasurements){
   startingX = 20;
   startingY = 20;
-  startingSeamLine = 100;
+  startingSeamLine = 70;
+  leftEdgeOfShoulderSeam = (personalMeasurements.shoulderLength * Math.cos(20)) + startingY;
+
 
   this.canvas = document.getElementById(canvasId);
   // setCanvasSize(this.canvas);
   this.context = this.canvas.getContext('2d');
   ctx = this.context;
 
+  drawShoulderSeam(ctx);
+  drawNeckline(ctx, personalMeasurements, startingSeamLine);
+  drawMiddleSeam(ctx, personalMeasurements);
+  drawArmholeCurve(ctx, personalMeasurements);
+}
 
-  // draw shoulder seam
-  ctx.beginPath();
-  ctx.moveTo(startingX + (personalMeasurements.shoulderLength * Math.sin(20)), startingY)
-  ctx.lineTo(startingX, (personalMeasurements.shoulderLength * Math.cos(20)) + startingY)
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'black';
-  ctx.stroke();
+function drawShoulderSeam(context){
+  context.beginPath();
+  context.moveTo(startingX + (personalMeasurements.shoulderLength * Math.sin(20)), startingY)
+  context.lineTo(startingX, leftEdgeOfShoulderSeam)
+  context.lineWidth = 1;
+  context.strokeStyle = 'black';
+  context.stroke();
+}
 
-  // draw neckline curve
-  ctx.beginPath();
+function drawNeckline(context, personalMeasurements, startingSeamLine){
+  context.beginPath();
   var necklineStartingX = startingX + (personalMeasurements.shoulderLength * Math.sin(20));
   var necklineStartingY = startingY;
-  var necklineMiddleX = 24;
-  var necklineMiddleY = 26;
   var necklineEndingX = startingSeamLine;
   var necklineEndingY = personalMeasurements.fullLength - (personalMeasurements.centerFrontLength - 0.375);
-  ctx.bezierCurveTo(necklineStartingX, necklineStartingY, necklineMiddleX, necklineMiddleY, necklineEndingX, necklineEndingY);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'black';
-  ctx.stroke();
+  var necklineMiddleX = necklineStartingX;
+  var necklineMiddleY = necklineEndingY;
 
-  // draw middle seam
-  ctx.beginPath();
-  ctx.moveTo(startingSeamLine,necklineEndingY);
-  ctx.lineTo(startingSeamLine,startingY + personalMeasurements.fullLength);
-  ctx.lineWidth = 1;
-  ctx.strokeStyle = 'black';
-  ctx.stroke();
+  context.bezierCurveTo(necklineStartingX, necklineStartingY, necklineMiddleX, necklineMiddleY, necklineEndingX, necklineEndingY);
+  context.lineWidth = 1;
+  context.strokeStyle = 'black';
+  context.stroke();
+}
+
+function drawMiddleSeam(context, personalMeasurements){
+  context.beginPath();
+  context.moveTo(startingSeamLine, personalMeasurements.fullLength - (personalMeasurements.centerFrontLength - 0.375));
+  context.lineTo(startingSeamLine, startingY + personalMeasurements.fullLength);
+  context.lineWidth = 1;
+  context.strokeStyle = 'black';
+  context.stroke();
+}
+
+function drawArmholeCurve(context, personalMeasurements){
+  debugger;
+  context.beginPath();
+  context.moveTo(startingX, leftEdgeOfShoulderSeam);
+  context.lineTo(startingX, leftEdgeOfShoulderSeam + personalMeasurements.armholeDepth);
+  context.lineWidth = 1;
+  context.strokeStyle = 'black';
+  context.stroke();
 }
 
 function setCanvasSize(canvas){
@@ -55,7 +75,8 @@ var personalMeasurements = {
   shoulderLength: 20,
   // across shoulder is "shoulder tip to shoulder tip – MEASURED on back – and DIVIDED by 2 (across shoulders for both front and back bodice sloper is taken on back)"
   acrossShoulder: 20,
-  armholeDepth: "shoulder tip to armpit (usually ½” to 1” below actual armpit). Using two l-square  rulers, arrange rulers as shown in diagram and measure. This measurement is the most often incorrectly measured measurement. Three quarters of the questions I receive are solved by correcting this measurement. Because of this, I suggest to cross check this measurement two ways. One way is to measure the armhole from shoulder tip to bottom of armhole on a very good fitting sleeveless blouse (measure straight and not measure along the curve). Another way to cross check this measurement is to compare it to ‘standard’ measurements. If the ‘standard’ armhole depth for a size 6 is 7 ¼” and armhole grades ¼” per size, use math to find the ‘standard’ armhole depth for your size. Are both of these measurements close to the armhole depth measurement taken on body?)",
+  // armholeDepth: is "shoulder tip to armpit (usually ½” to 1” below actual armpit). Using two l-square  rulers, arrange rulers as shown in diagram and measure. This measurement is the most often incorrectly measured measurement. Three quarters of the questions I receive are solved by correcting this measurement. Because of this, I suggest to cross check this measurement two ways. One way is to measure the armhole from shoulder tip to bottom of armhole on a very good fitting sleeveless blouse (measure straight and not measure along the curve). Another way to cross check this measurement is to compare it to ‘standard’ measurements. If the ‘standard’ armhole depth for a size 6 is 7 ¼” and armhole grades ¼” per size, use math to find the ‘standard’ armhole depth for your size. Are both of these measurements close to the armhole depth measurement taken on body?)"
+  armholeDepth: 10,
   bustDepth: "shoulder tip to bust point (bust point is the nipple. To find, poke a needle from INSIDE of bra/tank top to OUTSIDE and mark",
   bustSpan: "bust point to bust point, divided by 2",
   bustArc:  "CF to bust point to armhole depth/side seam. I do not advise to measure from CF to bust point and then pivot measuring tape up to armhole/side seam because the hollow in between breasts cause the measurement to be larger/bigger, especially if your breasts are very large. In theory, this measurement should be taken from the ‘bridge’ between bust points at CF but this is very hard. So I suggest to measure from bust point to armhole/side seam and then add this measurement to bust span measurement (make sure that bust span measurement is ½ of bust point to bust point)",
